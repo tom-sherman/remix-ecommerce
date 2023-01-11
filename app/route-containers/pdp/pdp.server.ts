@@ -18,7 +18,7 @@ export async function action({ request, params }: ActionArgs) {
   let formData = new URLSearchParams(body);
   let redirectTo = validateRedirect(
     formData.get("redirect"),
-    `/product/${params.slug}`
+    `/product/${params.slug}?cartOpen`
   );
   let variantId = formData.get("variantId");
   if (!variantId) {

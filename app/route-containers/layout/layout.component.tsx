@@ -1,4 +1,4 @@
-import { Suspense, lazy, useMemo, useState } from "react";
+import { Suspense, lazy, useMemo, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import type {
@@ -63,10 +63,12 @@ function Layout({
   cart,
   wishlist,
   children,
+  isCartOpen = false,
 }: {
   children?: ReactNode;
   cart?: UseDataFunctionReturn<typeof loader>["cart"];
   wishlist?: UseDataFunctionReturn<typeof loader>["wishlist"];
+  isCartOpen?: boolean;
 }) {
   let matches = useMatches();
   let rootMatch = matches.find((match) => match.id === "root");
@@ -97,6 +99,12 @@ function Layout({
 
   let [cartOpen, setCartOpen] = useState(false);
   let [wishlistOpen, setWishlistOpen] = useState(false);
+
+  useEffect(() => {
+    if (isCartOpen) {
+      setCartOpen(true);
+    }
+  }, [isCartOpen]);
 
   return (
     <>
@@ -171,9 +179,10 @@ function Document({ children }: { children: ReactNode }) {
     | UseDataFunctionReturn<typeof loader>
     | undefined;
 
-  let { cart, lang, wishlist } = loaderData || {
+  let { cart, lang, wishlist, isCartOpen } = loaderData || {
     lang: "en",
     pages: [],
+    isCartOpen: false,
   };
 
   return (
@@ -185,7 +194,7 @@ function Document({ children }: { children: ReactNode }) {
         <Links />
       </head>
       <body className="flex flex-col min-h-screen">
-        <Layout cart={cart} wishlist={wishlist}>
+        <Layout cart={cart} wishlist={wishlist} isCartOpen={isCartOpen}>
           {children}
         </Layout>
 

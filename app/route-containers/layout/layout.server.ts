@@ -71,5 +71,6 @@ export async function loader({ request, params }: LoaderArgs) {
     ],
     translations,
     wishlist,
+    isCartOpen: new URL(request.url).searchParams.has("cartOpen"),
   });
 }
